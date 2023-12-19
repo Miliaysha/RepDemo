@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ForumModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Activities">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Events" Relationship="Self.FK_Events_Activities" FromRole="Activities" ToRole="Events" />
+  </EntityType>
+  <EntityType Name="Directions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Events" Relationship="Self.FK_Events_Directions" FromRole="Directions" ToRole="Events" />
+  </EntityType>
+  <EntityType Name="Events">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Directions_code" Type="Int32" Nullable="false" />
+    <Property Name="Activ_code" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Activities" Relationship="Self.FK_Events_Activities" FromRole="Events" ToRole="Activities" />
+    <NavigationProperty Name="Directions" Relationship="Self.FK_Events_Directions" FromRole="Events" ToRole="Directions" />
+    <NavigationProperty Name="Role_info" Relationship="Self.FK_Role_info_Events" FromRole="Events" ToRole="Role_info" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Role_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Role_info" Relationship="Self.FK_Role_info_Role" FromRole="Role" ToRole="Role_info" />
+  </EntityType>
+  <EntityType Name="Role_info">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Lastname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Firstname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Events_id" Type="Int32" Nullable="false" />
+    <Property Name="Role_id" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Events" Relationship="Self.FK_Role_info_Events" FromRole="Role_info" ToRole="Events" />
+    <NavigationProperty Name="Role" Relationship="Self.FK_Role_info_Role" FromRole="Role_info" ToRole="Role" />
+  </EntityType>
+  <Association Name="FK_Events_Activities">
+    <End Role="Activities" Type="Self.Activities" Multiplicity="1" />
+    <End Role="Events" Type="Self.Events" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Activities">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Events">
+        <PropertyRef Name="Activ_code" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Events_Directions">
+    <End Role="Directions" Type="Self.Directions" Multiplicity="1" />
+    <End Role="Events" Type="Self.Events" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Directions">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Events">
+        <PropertyRef Name="Directions_code" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Role_info_Events">
+    <End Role="Events" Type="Self.Events" Multiplicity="1" />
+    <End Role="Role_info" Type="Self.Role_info" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Events">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Role_info">
+        <PropertyRef Name="Events_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Role_info_Role">
+    <End Role="Role" Type="Self.Role" Multiplicity="1" />
+    <End Role="Role_info" Type="Self.Role_info" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Role_info">
+        <PropertyRef Name="Role_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ForumEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Activities" EntityType="Self.Activities" />
+    <EntitySet Name="Directions" EntityType="Self.Directions" />
+    <EntitySet Name="Events" EntityType="Self.Events" />
+    <EntitySet Name="Role" EntityType="Self.Role" />
+    <EntitySet Name="Role_info" EntityType="Self.Role_info" />
+    <AssociationSet Name="FK_Events_Activities" Association="Self.FK_Events_Activities">
+      <End Role="Activities" EntitySet="Activities" />
+      <End Role="Events" EntitySet="Events" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Events_Directions" Association="Self.FK_Events_Directions">
+      <End Role="Directions" EntitySet="Directions" />
+      <End Role="Events" EntitySet="Events" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Role_info_Events" Association="Self.FK_Role_info_Events">
+      <End Role="Events" EntitySet="Events" />
+      <End Role="Role_info" EntitySet="Role_info" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Role_info_Role" Association="Self.FK_Role_info_Role">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="Role_info" EntitySet="Role_info" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
